@@ -6,23 +6,25 @@ int hashFunction(int key) {
     return key % SIZE;
 }
 
-// Quadratic Probing
+// ✅ Quadratic Probing (Simplified and Correct)
 void insertQuadratic(int table[], int key) {
-    int index = hashFunction(key);
-    int i = 0;
+    int index = hashFunction(key);   // Initial index
+    int i = 0;                       // Collision counter
 
-    while (table[(index + i * i) % SIZE] != -1 && i < SIZE) {
-        i++;
+    // Try up to SIZE times (to avoid infinite loop)
+    while (i < SIZE) {
+        int newIndex = (index + i * i) % SIZE;  // Quadratic probing formula
+
+        if (table[newIndex] == -1) {            // Empty slot found
+            table[newIndex] = key;
+            cout << key << " inserted at index " << newIndex << " (Quadratic Probing)\n";
+            return;
+        }
+
+        i++;   // Increase the probe count
     }
 
-    if (i == SIZE) {
-        cout << "Table Full!\n";
-        return;
-    }
-
-    int pos = (index + i * i) % SIZE;
-    table[pos] = key;
-    cout << key << " inserted at index " << pos << " (Quadratic Probing)\n";
+    cout << "Table Full! Cannot insert " << key << endl;
 }
 
 // Display table
@@ -39,7 +41,7 @@ void display(int table[]) {
 int main() {
     int table[SIZE];
     for (int i = 0; i < SIZE; i++)
-        table[i] = -1;
+        table[i] = -1;   // Initialize table with -1 (empty)
 
     int n, key;
     cout << "Enter number of clients: ";
@@ -54,4 +56,3 @@ int main() {
     display(table);
     return 0;
 }
-
