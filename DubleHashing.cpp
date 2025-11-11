@@ -1,36 +1,37 @@
 #include <iostream>
 using namespace std;
-#define SIZE 10   // size of hash table
-
+#define SIZE 10  
+ 
 int hashFunction(int key) {
     return key % SIZE;
 }
 
-int hash2(int key) {   // secondary hash function
-    return 7 - (key % 7);
+int hashFunction2(int key) {
+    return 7 - (key % 7);  
 }
 
-// Double Hashing
-void insertDouble(int table[], int key) {
-    int index1 = hashFunction(key);
-    int index2 = hash2(key);
-    int i = 0;
+void insertDoubleHash(int table[], int key) {
+    int index1 = hashFunction(key);    
+    int index2 = hashFunction2(key);    
+    int i = 0;                        
 
-    while (table[(index1 + i * index2) % SIZE] != -1 && i < SIZE) {
-        i++;
+    
+    while (i < SIZE) {
+        int newIndex = (index1 + i * index2) % SIZE;  
+
+        if (table[newIndex] == -1) {               
+            table[newIndex] = key;
+            cout << key << " inserted at index " << newIndex << " (Double Hashing)\n";
+            return;
+        }
+
+        i++;  
     }
 
-    if (i == SIZE) {
-        cout << "Table Full!\n";
-        return;
-    }
-
-    int pos = (index1 + i * index2) % SIZE;
-    table[pos] = key;
-    cout << key << " inserted at index " << pos << " (Double Hashing)\n";
+    cout << "Table Full! Cannot insert " << key << endl;
 }
 
-// Display table
+
 void display(int table[]) {
     cout << "\nHash Table:\n";
     for (int i = 0; i < SIZE; i++) {
@@ -44,7 +45,7 @@ void display(int table[]) {
 int main() {
     int table[SIZE];
     for (int i = 0; i < SIZE; i++)
-        table[i] = -1;
+        table[i] = -1;   
 
     int n, key;
     cout << "Enter number of clients: ";
@@ -53,10 +54,9 @@ int main() {
     for (int i = 0; i < n; i++) {
         cout << "Enter telephone number (as key): ";
         cin >> key;
-        insertDouble(table, key);
+        insertDoubleHash(table, key);
     }
 
     display(table);
     return 0;
 }
-
